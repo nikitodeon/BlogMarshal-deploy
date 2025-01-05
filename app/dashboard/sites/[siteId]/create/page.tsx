@@ -1,7 +1,7 @@
 "use client";
 
 // import { CreatePostAction } from "@/app/actions";
-// import TailwindEditor from "@/app/components/dashboard/EditorWrapper";
+import TailwindEditor from "@/app/components/dashboard/EditorWrapper";
 import { UploadDropzone } from "@/app/utils/UploadthingComponents";
 // import { PostSchema } from "@/app/utils/zodSchemas";
 import { Button } from "@/components/ui/button";
@@ -20,7 +20,7 @@ import { parseWithZod } from "@conform-to/zod";
 import { ArrowLeft, Atom } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-// import { JSONContent } from "novel";
+import { JSONContent } from "novel";
 import { useActionState, useEffect, useState } from "react";
 import { toast } from "sonner";
 // import slugify from "react-slugify";
@@ -37,6 +37,21 @@ export default function ArticleCreationRoute() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [imageUrl, setImageUrl] = useState<undefined | string>(undefined);
+  const [value, setValue] = useState<JSONContent | undefined>(undefined);
+  //   const [slug, setSlugValue] = useState<undefined | string>(undefined);
+  //   const [title, setTitle] = useState<undefined | string>(undefined);
+  //   const [lastResult, action] = useActionState(CreatePostAction, undefined);
+  //   const [form, fields] = useForm({
+  //     lastResult,
+
+  //     onValidate({ formData }) {
+  //       return parseWithZod(formData, { schema: PostSchema });
+  //     },
+
+  //     shouldValidate: "onBlur",
+  //     shouldRevalidate: "onInput",
+  //   });
+
   useEffect(() => {
     async function fetchSiteId() {
       try {
@@ -58,21 +73,6 @@ export default function ArticleCreationRoute() {
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
-
-  //   const [value, setValue] = useState<JSONContent | undefined>(undefined);
-  //   const [slug, setSlugValue] = useState<undefined | string>(undefined);
-  //   const [title, setTitle] = useState<undefined | string>(undefined);
-  //   const [lastResult, action] = useActionState(CreatePostAction, undefined);
-  //   const [form, fields] = useForm({
-  //     lastResult,
-
-  //     onValidate({ formData }) {
-  //       return parseWithZod(formData, { schema: PostSchema });
-  //     },
-
-  //     shouldValidate: "onBlur",
-  //     shouldRevalidate: "onInput",
-  //   });
 
   //   function handleSlugGeneration() {
   //     const titleInput = title;
@@ -193,24 +193,25 @@ export default function ArticleCreationRoute() {
                 />
               )}
 
-              {/* <p className="text-red-500 text-sm">{fields.coverImage.errors}</p>
+              {/* <p className="text-red-500 text-sm">{fields.coverImage.errors}</p>*/}
             </div>
 
             <div className="grid gap-2">
               <Label>Article Content</Label>
+              {/*
               <input
                 type="hidden"
                 name={fields.articleContent.name}
                 key={fields.articleContent.key}
                 defaultValue={fields.articleContent.initialValue}
                 value={JSON.stringify(value)}
-              />
+              />*/}
               <TailwindEditor onChange={setValue} initialValue={value} />
-              <p className="text-red-500 text-sm">
+              {/* <p className="text-red-500 text-sm">
                 {fields.articleContent.errors}
-              </p>*/}
+              </p> */}
             </div>
-
+            <Button className="w-fit">Submit</Button>
             {/* <SubmitButton text="Create Article" /> */}
           </form>
         </CardContent>
