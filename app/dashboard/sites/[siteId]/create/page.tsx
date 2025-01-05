@@ -24,7 +24,7 @@ import { JSONContent } from "novel";
 import { useActionState, useEffect, useState } from "react";
 import { toast } from "sonner";
 import slugify from "react-slugify";
-// import { SubmitButton } from "@/app/components/dashboard/SubmitButtons";
+import { SubmitButton } from "@/app/components/dashboard/SubmitButtons";
 
 export default function ArticleCreationRoute() {
   //     {
@@ -212,8 +212,8 @@ export default function ArticleCreationRoute() {
                 {fields.articleContent.errors}
               </p>
             </div>
-            <Button className="w-fit">Submit</Button>
-            {/* <SubmitButton text="Create Article" /> */}
+
+            <SubmitButton text="Create Article" />
           </form>
         </CardContent>
       </Card>

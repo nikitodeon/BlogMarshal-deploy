@@ -1,6 +1,6 @@
 // import { EmptyState } from "@/app/components/dashboard/EmptyState";
 import { prisma } from "@/app/utils/db";
-// import { Badge } from "@/components/ui/badge";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -17,14 +17,14 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-// import {
-//   Table,
-//   TableBody,
-//   TableCell,
-//   TableHead,
-//   TableHeader,
-//   TableRow,
-// } from "@/components/ui/table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import {
   Book,
@@ -38,52 +38,52 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 
 async function getData(userId: string, siteId: string) {
-  const data = await prisma.post.findMany({
+  //   const data = await prisma.post.findMany({
+  //     where: {
+  //       id: siteId,
+  //       userId: userId,
+  //     },
+  //     select: {
+  //       image: true,
+  //       title: true,
+  //       createdAt: true,
+  //       id: true,
+  //       //   Site: {
+  //       //     select: {
+  //       //       subdirectory: true,
+  //       //     },
+  //       //   },
+  //     },
+  //     orderBy: {
+  //       createdAt: "desc",
+  //     },
+  //   });
+  //   return data;
+  // }
+
+  const data = await prisma.site.findUnique({
     where: {
       id: siteId,
       userId: userId,
     },
     select: {
-      image: true,
-      title: true,
-      createdAt: true,
-      id: true,
-      //   Site: {
-      //     select: {
-      //       subdirectory: true,
-      //     },
-      //   },
-    },
-    orderBy: {
-      createdAt: "desc",
+      subdirectory: true,
+      posts: {
+        select: {
+          image: true,
+          title: true,
+          createdAt: true,
+          id: true,
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+      },
     },
   });
+
   return data;
 }
-
-//   const data = await prisma.site.findUnique({
-//     where: {
-//       id: siteId,
-//       userId: userId,
-//     },
-//     select: {
-//       subdirectory: true,
-//       posts: {
-//         select: {
-//           image: true,
-//           title: true,
-//           createdAt: true,
-//           id: true,
-//         },
-//         orderBy: {
-//           createdAt: "desc",
-//         },
-//       },
-//     },
-//   });
-
-//   return data;
-// }
 
 export default async function SiteIdRoute({
   params,
@@ -129,7 +129,7 @@ export default async function SiteIdRoute({
         </Button>
       </div>
 
-      {data /*?.posts*/ === undefined || data /*.posts*/.length === 0 ? (
+      {data?.posts === undefined || data.posts.length === 0 ? (
         <div className="flex flex-col items-center justify-center rounded-md border border-dashed p-8 text-center animate-in fade-in-50">
           <div className="flex size-20 items-center justify-center rounded-full bg-primary/10">
             <FileIcon className="size-10 text-primary" />
@@ -152,8 +152,7 @@ export default async function SiteIdRoute({
           buttonText="Create Article"
           href={`/dashboard/sites/${params.siteId}/create`}
         />*/
-        {
-          /*
+
         <div>
           <Card>
             <CardHeader>
@@ -174,7 +173,7 @@ export default async function SiteIdRoute({
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {data.posts.map((item) => (
+                  {data?.posts.map((item) => (
                     <TableRow key={item.id}>
                       <TableCell>
                         <Image
@@ -213,18 +212,18 @@ export default async function SiteIdRoute({
                             <DropdownMenuLabel>Actions</DropdownMenuLabel>
                             <DropdownMenuSeparator />
                             <DropdownMenuItem asChild>
-                              <Link
+                              {/* <Link
                                 href={`/dashboard/sites/${params.siteId}/${item.id}`}
-                              >
-                                Edit
-                              </Link>
+                              > */}
+                              Edit
+                              {/* </Link> */}
                             </DropdownMenuItem>
                             <DropdownMenuItem asChild>
-                              <Link
+                              {/* <Link
                                 href={`/dashboard/sites/${params.siteId}/${item.id}/delete`}
-                              >
-                                Delete
-                              </Link>
+                              > */}
+                              Delete
+                              {/* </Link> */}
                             </DropdownMenuItem>
                           </DropdownMenuContent>
                         </DropdownMenu>
@@ -235,8 +234,7 @@ export default async function SiteIdRoute({
               </Table>
             </CardContent>
           </Card>
-        </div> */
-        }
+        </div>
       )}
     </>
   );
