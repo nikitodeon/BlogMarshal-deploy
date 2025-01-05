@@ -1,9 +1,9 @@
 "use client";
 
-// import { CreatePostAction } from "@/app/actions";
+import { CreatePostAction } from "@/app/actions";
 import TailwindEditor from "@/app/components/dashboard/EditorWrapper";
 import { UploadDropzone } from "@/app/utils/UploadthingComponents";
-// import { PostSchema } from "@/app/utils/zodSchemas";
+import { PostSchema } from "@/app/utils/zodSchemas";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -23,7 +23,7 @@ import Link from "next/link";
 import { JSONContent } from "novel";
 import { useActionState, useEffect, useState } from "react";
 import { toast } from "sonner";
-// import slugify from "react-slugify";
+import slugify from "react-slugify";
 // import { SubmitButton } from "@/app/components/dashboard/SubmitButtons";
 
 export default function ArticleCreationRoute() {
@@ -38,19 +38,20 @@ export default function ArticleCreationRoute() {
   const [error, setError] = useState<string | null>(null);
   const [imageUrl, setImageUrl] = useState<undefined | string>(undefined);
   const [value, setValue] = useState<JSONContent | undefined>(undefined);
-  //   const [slug, setSlugValue] = useState<undefined | string>(undefined);
-  //   const [title, setTitle] = useState<undefined | string>(undefined);
-  //   const [lastResult, action] = useActionState(CreatePostAction, undefined);
-  //   const [form, fields] = useForm({
-  //     lastResult,
+  const [slug, setSlugValue] = useState<undefined | string>(undefined);
+  const [title, setTitle] = useState<undefined | string>(undefined);
+  const [lastResult, action] = useActionState(CreatePostAction, undefined);
 
-  //     onValidate({ formData }) {
-  //       return parseWithZod(formData, { schema: PostSchema });
-  //     },
+  const [form, fields] = useForm({
+    lastResult,
 
-  //     shouldValidate: "onBlur",
-  //     shouldRevalidate: "onInput",
-  //   });
+    onValidate({ formData }) {
+      return parseWithZod(formData, { schema: PostSchema });
+    },
+
+    shouldValidate: "onBlur",
+    shouldRevalidate: "onInput",
+  });
 
   useEffect(() => {
     async function fetchSiteId() {
@@ -74,17 +75,17 @@ export default function ArticleCreationRoute() {
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
 
-  //   function handleSlugGeneration() {
-  //     const titleInput = title;
+  function handleSlugGeneration() {
+    const titleInput = title;
 
-  //     if (titleInput?.length === 0 || titleInput === undefined) {
-  //       return toast.error("Pleaes create a title first");
-  //     }
+    if (titleInput?.length === 0 || titleInput === undefined) {
+      return toast.error("Please create a title first");
+    }
 
-  //     setSlugValue(slugify(titleInput));
+    setSlugValue(slugify(titleInput));
 
-  //     return toast.success("Slug has been created");
-  //   }
+    return toast.success("Slug has been created");
+  }
   return (
     <>
       <div className="flex items-center">
@@ -106,9 +107,9 @@ export default function ArticleCreationRoute() {
         <CardContent>
           <form
             className="flex flex-col gap-6"
-            // id={form.id}
-            // onSubmit={form.onSubmit}
-            // action={action}
+            id={form.id}
+            onSubmit={form.onSubmit}
+            action={action}
           >
             <input
               type="hidden"
@@ -118,60 +119,60 @@ export default function ArticleCreationRoute() {
             <div className="grid gap-2">
               <Label>Title</Label>
               <Input
-                // key={fields.title.key}
-                // name={fields.title.name}
-                // defaultValue={fields.title.initialValue}
+                key={fields.title.key}
+                name={fields.title.name}
+                defaultValue={fields.title.initialValue}
                 placeholder="Nextjs blogging application"
-                // onChange={(e) => setTitle(e.target.value)}
-                // value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                value={title}
               />
-              {/* <p className="text-red-500 text-sm">{fields.title.errors}</p> */}
+              <p className="text-red-500 text-sm">{fields.title.errors}</p>
             </div>
 
             <div className="grid gap-2">
               <Label>Slug</Label>
               <Input
-                // key={fields.slug.key}
-                // name={fields.slug.name}
-                // defaultValue={fields.slug.initialValue}
+                key={fields.slug.key}
+                name={fields.slug.name}
+                defaultValue={fields.slug.initialValue}
                 placeholder="Article Slug"
-                // onChange={(e) => setSlugValue(e.target.value)}
-                // value={slug}
+                onChange={(e) => setSlugValue(e.target.value)}
+                value={slug}
               />
               <Button
-                // onClick={handleSlugGeneration}
+                onClick={handleSlugGeneration}
                 className="w-fit"
                 variant="secondary"
                 type="button"
               >
                 <Atom className="size-4 mr-2" /> Generate Slug
               </Button>
-              {/* <p className="text-red-500 text-sm">{fields.slug.errors}</p> */}
+              <p className="text-red-500 text-sm">{fields.slug.errors}</p>
             </div>
 
             <div className="grid gap-2">
               <Label>Small Description</Label>
               <Textarea
-                // key={fields.smallDescription.key}
-                // name={fields.smallDescription.name}
-                // defaultValue={fields.smallDescription.initialValue}
+                key={fields.smallDescription.key}
+                name={fields.smallDescription.name}
+                defaultValue={fields.smallDescription.initialValue}
                 placeholder="Small Description for your blog article..."
                 className="h-32"
               />
-              {/* <p className="text-red-500 text-sm">
+              <p className="text-red-500 text-sm">
                 {fields.smallDescription.errors}
-              </p> */}
+              </p>
             </div>
 
             <div className="grid gap-2">
               <Label>Cover Image</Label>
-              {/* <input
-                // type="hidden"
-                // name={fields.coverImage.name}
-                // key={fields.coverImage.key}
-                // defaultValue={fields.coverImage.initialValue}
+              <input
+                type="hidden"
+                name={fields.coverImage.name}
+                key={fields.coverImage.key}
+                defaultValue={fields.coverImage.initialValue}
                 value={imageUrl}
-              /> */}
+              />
               {imageUrl ? (
                 <Image
                   src={imageUrl}
@@ -193,23 +194,23 @@ export default function ArticleCreationRoute() {
                 />
               )}
 
-              {/* <p className="text-red-500 text-sm">{fields.coverImage.errors}</p>*/}
+              <p className="text-red-500 text-sm">{fields.coverImage.errors}</p>
             </div>
 
             <div className="grid gap-2">
               <Label>Article Content</Label>
-              {/*
+
               <input
                 type="hidden"
                 name={fields.articleContent.name}
                 key={fields.articleContent.key}
                 defaultValue={fields.articleContent.initialValue}
                 value={JSON.stringify(value)}
-              />*/}
+              />
               <TailwindEditor onChange={setValue} initialValue={value} />
-              {/* <p className="text-red-500 text-sm">
+              <p className="text-red-500 text-sm">
                 {fields.articleContent.errors}
-              </p> */}
+              </p>
             </div>
             <Button className="w-fit">Submit</Button>
             {/* <SubmitButton text="Create Article" /> */}

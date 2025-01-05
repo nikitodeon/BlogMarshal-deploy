@@ -33,6 +33,7 @@ const TailwindEditor = ({ onChange, initialValue }: EditorProps) => {
             class: `prose prose-lg dark:prose-invert prose-headings:font-title font-default focus:outline-none max-w-full`,
           },
         }}
+        immediatelyRender={false}
         extensions={extensions}
         initialContent={initialValue}
         onUpdate={({ editor }) => {
