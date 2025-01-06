@@ -13,7 +13,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import Defaultimage from "@/public/default.png";
-// import { EmptyState } from "@/app/components/dashboard/EmptyState";
+import { EmptyState } from "@/app/components/dashboard/EmptyState";
 
 async function getData(userId: string) {
   const data = await prisma.site.findMany({
@@ -47,29 +47,14 @@ export default async function SitesRoute() {
       </div>
 
       {data === undefined || data.length === 0 ? (
-        <div className="flex flex-col items-center justify-center rounded-md border border-dashed p-8 text-center animate-in fade-in-50">
-          <div className="flex size-20 items-center justify-center rounded-full bg-primary/10">
-            <FileIcon className="size-10 text-primary" />
-          </div>
-          <h2 className="mt-4 text-lg font-semibold">No Sites Created</h2>
-          <p className="mt-1 text-sm text-muted-foreground mb-6">
-            You don&apos;t have any sites created yet.
-          </p>
-          <Button asChild>
-            <Link href={"/dashboard/sites/new"}>
-              <PlusCircle className="mr-2 size-4" /> Create Site
-            </Link>
-          </Button>
-        </div>
-      ) : (
-        /* <EmptyState
+        <EmptyState
           title="You dont have any Sites created"
           description="You currently dont have any Sites. Please create some so that you can
         see them right here!"
           buttonText="Create Site"
           href="/dashboard/sites/new"
-        /> */
-
+        />
+      ) : (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:gap-7">
           {data.map((item) => (
             <Card key={item.id}>

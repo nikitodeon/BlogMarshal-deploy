@@ -25,6 +25,7 @@ import { useActionState, useEffect, useState } from "react";
 import { toast } from "sonner";
 import slugify from "react-slugify";
 import { SubmitButton } from "@/app/components/dashboard/SubmitButtons";
+import { useParams } from "next/navigation";
 
 export default function ArticleCreationRoute() {
   //     {
@@ -33,7 +34,8 @@ export default function ArticleCreationRoute() {
   //   params: Promise<{ siteId: string }>;
   // }
   //   const { siteId } = await params;
-  const [siteId, setSiteId] = useState<string | null>(null);
+  const [data, setData] = useState(null);
+  const { siteId } = useParams();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [imageUrl, setImageUrl] = useState<undefined | string>(undefined);
@@ -56,12 +58,12 @@ export default function ArticleCreationRoute() {
   useEffect(() => {
     async function fetchSiteId() {
       try {
-        const response = await fetch("/api/params");
+        const response = await fetch(`/api/params?siteId=${siteId}`);
         if (!response.ok) {
           throw new Error("Failed to fetch siteId");
         }
-        const data = await response.json();
-        setSiteId(data.siteId);
+        const result = await response.json();
+        setData(result);
       } catch (err: any) {
         setError(err.message);
       } finally {
@@ -70,7 +72,7 @@ export default function ArticleCreationRoute() {
     }
 
     fetchSiteId();
-  }, []);
+  }, [siteId]);
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
