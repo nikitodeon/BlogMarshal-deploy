@@ -10,40 +10,66 @@ import { stripe } from "./utils/stripe";
 
 export async function CreateSiteAction(prevState: any, formData: FormData) {
   const user = await requireUser(); // Проверяем авторизацию пользователя
-
-  // Валидация формы через Zod Schema
-  const submission = await parseWithZod(formData, {
-    schema: SiteCreationSchema({
-      isSubdirectoryUnique: async () => {
-        const subdirectory = formData.get("subdirectory") as string;
-        const existingSubdirectory = await prisma.site.findUnique({
-          where: { subdirectory },
-        });
-        return !existingSubdirectory; // true, если субдиректория уникальна
+  const [subStatus, sites] = await Promise.all([
+    prisma.subscription.findUnique({
+      where: {
+        userId: user.id,
+      },
+      select: {
+        status: true,
       },
     }),
-    async: true,
-  });
+    prisma.site.findMany({
+      where: {
+        userId: user.id,
+      },
+    }),
+  ]);
 
-  // Если есть ошибки валидации, возвращаем их
-  if (submission.status !== "success") {
-    return submission.reply();
+  if (!subStatus || subStatus.status !== "active") {
+    if (sites.length < 1) {
+      await createSite();
+    } else {
+      return redirect("/dashboard/pricing");
+    }
+  } else if (subStatus.status === "active") {
+    await createSite();
   }
+  // Валидация формы через Zod Schema
+  async function createSite() {
+    const submission = await parseWithZod(formData, {
+      schema: SiteCreationSchema({
+        isSubdirectoryUnique: async () => {
+          const subdirectory = formData.get("subdirectory") as string;
+          const existingSubdirectory = await prisma.site.findUnique({
+            where: { subdirectory },
+          });
+          return !existingSubdirectory; // true, если субдиректория уникальна
+        },
+      }),
+      async: true,
+    });
 
-  // Извлекаем данные из успешного сабмишена
-  const { name, description, subdirectory } = submission.value;
+    // Если есть ошибки валидации, возвращаем их
+    if (submission.status !== "success") {
+      return submission.reply();
+    }
 
-  // Создаем новый сайт
-  await prisma.site.create({
-    data: {
-      name,
-      description,
-      subdirectory,
-      userId: user.id,
-    },
-  });
+    // Извлекаем данные из успешного сабмишена
+    const { name, description, subdirectory } = submission.value;
 
-  // Редирект на список сайтов
+    // Создаем новый сайт
+    await prisma.site.create({
+      data: {
+        name,
+        description,
+        subdirectory,
+        userId: user.id,
+      },
+    });
+
+    // Редирект на список сайтов
+  }
   return redirect("/dashboard/sites");
 }
 

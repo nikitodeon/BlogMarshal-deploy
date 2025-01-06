@@ -10,7 +10,7 @@ import {
 import { Check } from "lucide-react";
 import { SubmitButton } from "../dashboard/SubmitButtons";
 import Link from "next/link";
-// import { CreateSubscription } from "@/app/actions";
+import { CreateSubscription } from "@/app/actions";
 
 interface iAppProps {
   id: number;
@@ -97,7 +97,7 @@ export function PricingTable() {
               </ul>
             </CardContent>
             <CardFooter>
-              {/* {item.id === 1 ? (
+              {item.id === 1 ? (
                 <form className="w-full" action={CreateSubscription}>
                   <SubmitButton text="Buy Plan" className="mt-5 w-full" />
                 </form>
@@ -105,8 +105,7 @@ export function PricingTable() {
                 <Button variant="outline" className="mt-5 w-full" asChild>
                   <Link href="/dashboard">Try for free</Link>
                 </Button>
-              )} */}
-              kkk
+              )}
             </CardFooter>
           </Card>
         ))}
