@@ -38,28 +38,28 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 
 async function getData(userId: string, siteId: string) {
-  //   const data = await prisma.post.findMany({
-  //     where: {
-  //       id: siteId,
-  //       userId: userId,
-  //     },
-  //     select: {
-  //       image: true,
-  //       title: true,
-  //       createdAt: true,
-  //       id: true,
-  //       //   Site: {
-  //       //     select: {
-  //       //       subdirectory: true,
-  //       //     },
-  //       //   },
-  //     },
-  //     orderBy: {
-  //       createdAt: "desc",
-  //     },
-  //   });
-  //   return data;
-  // }
+  //     const data = await prisma.post.findMany({
+  //       where: {
+  //         id: siteId,
+  //         userId: userId,
+  //       },
+  //       select: {
+  //         image: true,
+  //         title: true,
+  //         createdAt: true,
+  //         id: true,
+  //           Site: {
+  //             select: {
+  //               subdirectory: true,
+  //             },
+  //           },
+  //       },
+  //       orderBy: {
+  //         createdAt: "desc",
+  //       },
+  //     });
+  //     return data;
+  //   }
 
   const data = await prisma.site.findUnique({
     where: {
@@ -74,6 +74,11 @@ async function getData(userId: string, siteId: string) {
           title: true,
           createdAt: true,
           id: true,
+          Site: {
+            select: {
+              subdirectory: true,
+            },
+          },
         },
         orderBy: {
           createdAt: "desc",
@@ -104,10 +109,7 @@ export default async function SiteIdRoute({
     <>
       <div className="flex w-full justify-end gap-x-4">
         <Button asChild variant="secondary">
-          <Link
-            href="#"
-            //   href={`/blog/${data?.subdirectory}`}
-          >
+          <Link href={`/blog/${data?.subdirectory}`}>
             <Book className="size-4 mr-2" />
             View Blog
           </Link>
