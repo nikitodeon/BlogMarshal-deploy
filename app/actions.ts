@@ -7,10 +7,7 @@ import { prisma } from "./utils/db";
 import { requireUser } from "./utils/requireUser";
 import { stripe } from "./utils/stripe";
 
-export async function CreateSiteAction(
-  prevState: Record<string, unknown>,
-  formData: FormData
-) {
+export async function CreateSiteAction(prevState: any, formData: FormData) {
   const user = await requireUser(); // Проверяем авторизацию пользователя
   const [subStatus, sites] = await Promise.all([
     prisma.subscription.findUnique({
@@ -75,10 +72,7 @@ export async function CreateSiteAction(
   return redirect("/dashboard/sites");
 }
 
-export async function CreatePostAction(
-  prevState: Record<string, unknown>,
-  formData: FormData
-) {
+export async function CreatePostAction(prevState: any, formData: FormData) {
   const user = await requireUser();
 
   const submission = parseWithZod(formData, {
@@ -104,10 +98,7 @@ export async function CreatePostAction(
   return redirect(`/dashboard/sites/${formData.get("siteId")}`);
 }
 
-export async function EditPostActions(
-  prevState: Record<string, unknown>,
-  formData: FormData
-) {
+export async function EditPostActions(prevState: any, formData: FormData) {
   const user = await requireUser();
 
   const submission = parseWithZod(formData, {

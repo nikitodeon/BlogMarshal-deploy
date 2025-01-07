@@ -26,13 +26,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
-import {
-  Book,
-  FileIcon,
-  MoreHorizontal,
-  PlusCircle,
-  Settings,
-} from "lucide-react";
+import { Book, MoreHorizontal, PlusCircle, Settings } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { redirect } from "next/navigation";

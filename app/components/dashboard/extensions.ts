@@ -84,7 +84,7 @@ const starterKit = StarterKit.configure({
 export const defaultExtensions = [
   starterKit,
   placeholder,
-  TiptapLink,
+  tiptapLink,
   TiptapImage,
   UpdatedImage,
   taskList,
