@@ -1,14 +1,16 @@
 "use server";
 
-import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { redirect } from "next/navigation";
 import { parseWithZod } from "@conform-to/zod";
-import { PostSchema, SiteCreationSchema, siteSchema } from "./utils/zodSchemas";
+import { PostSchema, SiteCreationSchema } from "./utils/zodSchemas";
 import { prisma } from "./utils/db";
 import { requireUser } from "./utils/requireUser";
 import { stripe } from "./utils/stripe";
 
-export async function CreateSiteAction(prevState: any, formData: FormData) {
+export async function CreateSiteAction(
+  prevState: Record<string, unknown>,
+  formData: FormData
+) {
   const user = await requireUser(); // Проверяем авторизацию пользователя
   const [subStatus, sites] = await Promise.all([
     prisma.subscription.findUnique({
@@ -73,7 +75,10 @@ export async function CreateSiteAction(prevState: any, formData: FormData) {
   return redirect("/dashboard/sites");
 }
 
-export async function CreatePostAction(prevState: any, formData: FormData) {
+export async function CreatePostAction(
+  prevState: Record<string, unknown>,
+  formData: FormData
+) {
   const user = await requireUser();
 
   const submission = parseWithZod(formData, {
@@ -84,7 +89,7 @@ export async function CreatePostAction(prevState: any, formData: FormData) {
     return submission.reply();
   }
 
-  const data = await prisma.post.create({
+  await prisma.post.create({
     data: {
       title: submission.value.title,
       smallDescription: submission.value.smallDescription,
@@ -99,7 +104,10 @@ export async function CreatePostAction(prevState: any, formData: FormData) {
   return redirect(`/dashboard/sites/${formData.get("siteId")}`);
 }
 
-export async function EditPostActions(prevState: any, formData: FormData) {
+export async function EditPostActions(
+  prevState: Record<string, unknown>,
+  formData: FormData
+) {
   const user = await requireUser();
 
   const submission = parseWithZod(formData, {
@@ -110,7 +118,7 @@ export async function EditPostActions(prevState: any, formData: FormData) {
     return submission.reply();
   }
 
-  const data = await prisma.post.update({
+  await prisma.post.update({
     where: {
       userId: user.id,
       id: formData.get("articleId") as string,
@@ -130,7 +138,7 @@ export async function EditPostActions(prevState: any, formData: FormData) {
 export async function DeletePost(formData: FormData) {
   const user = await requireUser();
 
-  const data = await prisma.post.delete({
+  await prisma.post.delete({
     where: {
       userId: user.id,
       id: formData.get("articleId") as string,
@@ -143,7 +151,7 @@ export async function DeletePost(formData: FormData) {
 export async function UpdateImage(formData: FormData) {
   const user = await requireUser();
 
-  const data = await prisma.site.update({
+  await prisma.site.update({
     where: {
       userId: user.id,
       id: formData.get("siteId") as string,
@@ -159,7 +167,7 @@ export async function UpdateImage(formData: FormData) {
 export async function DeleteSite(formData: FormData) {
   const user = await requireUser();
 
-  const data = await prisma.site.delete({
+  await prisma.site.delete({
     where: {
       userId: user.id,
       id: formData.get("siteId") as string,
