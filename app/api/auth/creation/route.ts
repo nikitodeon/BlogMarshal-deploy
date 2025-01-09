@@ -29,9 +29,14 @@ export async function GET() {
     });
   }
 
-  return NextResponse.redirect(
-    process.env.NODE_ENV === "production"
-      ? "https://blog-marshal-three.vercel.app/dashboard"
-      : "http://localhost:3000/dashboard"
-  );
+  return NextResponse.json({
+    success: true,
+    message: "User created or found",
+  });
+
+  //   .redirect(
+  //     process.env.NODE_ENV === "production"
+  //       ? "https://blog-marshal-three.vercel.app/dashboard"
+  //       : "http://localhost:3000/dashboard"
+  //   );
 }
