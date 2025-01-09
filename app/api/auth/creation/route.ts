@@ -27,16 +27,20 @@ export async function GET() {
           user.picture ?? `https://avatar.vercel.sh/${user.given_name}`,
       },
     });
+
+    if (!dbUser) {
+      throw new Error(" failed to create user in database");
+    }
   }
 
-  return NextResponse.json({
-    success: true,
-    message: "User created or found",
-  });
+  // .json({
+  //   success: true,
+  //   message: "User created or found",
+  // });
 
-  //   .redirect(
-  //     process.env.NODE_ENV === "production"
-  //       ? "https://blog-marshal-three.vercel.app/dashboard"
-  //       : "http://localhost:3000/dashboard"
-  //   );
+  return NextResponse.redirect(
+    process.env.NODE_ENV === "production"
+      ? "https://blog-marshal-three.vercel.app/dashboard"
+      : "http://localhost:3000/dashboard"
+  );
 }
